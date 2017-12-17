@@ -1,0 +1,1 @@
+{"service-function": [{"name": "SF1", "type": "firewall", "sf-data-plane-locator": [{"name": "cdp-sf1", "ip": "127.0.0.1", "port": 11111, "service-function-forwarder": "SFF1", "transport": "service-locator:vxlan-gpe"}], "rest-uri": "http://127.0.0.1:5000", "ip-mgmt-address": "127.0.0.1"}]}

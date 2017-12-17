@@ -22,6 +22,7 @@ from ..common.sfc_globals import sfc_globals
 from ..nsh.common import VXLANGPE, BASEHEADER, CONTEXTHEADER, ETHHEADER, TRACEREQHEADER, NSH_NEXT_PROTO_IPV4
 from ..nsh.common import PAYLOAD_START_INDEX_NSH_TYPE1, NSH_NEXT_PROTO_ETH
 from ..nsh.common import PAYLOAD_START_INDEX_NSH_TYPE3, IPV4_HEADER_LEN_BYTES
+from ..nsh.common import NSH_OAM_TRACE_DEST_IP_REPORT_OFFSET, NSH_OAM_TRACE_DEST_IP_REPORT_LEN
 from ..nsh import decode as nsh_decode
 from ..nsh.encode import add_sf_to_trace_pkt
 from ..nsh.service_index import process_service_index
@@ -35,8 +36,9 @@ __status__ = "beta"
 """
 All supported services
 """
-
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+
 
 #: Global flags used for indication of current packet processing status
 # Packet needs more processing within this SFF
@@ -274,6 +276,9 @@ class BasicService(object):
 
         """
         logger.info('%s service received packet from %s:', self.service_type, addr)
+        
+        logger.debug("service in the project print this:\n")
+
         logger.debug('%s %s', addr, binascii.hexlify(data))
         rw_data = self._process_incoming_packet(data, addr)
         if self.is_eth_nsh:
@@ -284,10 +289,12 @@ class BasicService(object):
             # Must send it to UDP port of VxLAN-gpe
             # if nsh_decode.is_vxlan_nsh_legacy_message(data, 0):
                 # Disregard source port of received packet and send packet back to 6633
-            addr_l = list(addr)
-            addr_l[1] = 6633
-            addr = tuple(addr_l)
+            # addr_l = list(addr)
+            # addr_l[1] = 6633
+            # addr = tuple(addr_l)
+            # self.transport.sendto(rw_data, addr)
             self.transport.sendto(rw_data, addr)
+
             logger.info('%s: sending packets to %s', self.service_type, addr)
         elif nsh_decode.is_trace_message(data, offset):
             # Add SF information to packet

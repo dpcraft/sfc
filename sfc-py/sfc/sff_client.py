@@ -16,6 +16,8 @@ import socket
 import ipaddress
 import getopt
 import asyncio
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(1, parent_dir)
 
 from sfc.nsh.common import BASEHEADER, CONTEXTHEADER, ETHERNET_ADDR_SIZE, ETHHEADER, GREHEADER, InnerHeader
 from sfc.nsh.common import NSH_NEXT_PROTO_ETH, NSH_NEXT_PROTO_IPV4, OAM_TRACE_REQ_TYPE, TRACEREQHEADER, VXLAN, VXLANGPE
@@ -27,8 +29,6 @@ from sfc.nsh.encode import build_trace_req_header, build_udp_packet, process_con
 
 # fix Python 3 relative imports inside packages
 # CREDITS: http://stackoverflow.com/a/6655098/4183498
-parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(1, parent_dir)
 
 __package__ = 'sfc'
 
